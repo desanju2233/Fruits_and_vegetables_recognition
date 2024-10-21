@@ -2,6 +2,7 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 
+# Function to predict the class of an uploaded image
 def predict_class(test_image):
     model = tf.keras.models.load_model("Fruits_and_vegetables_recognition.h5")
     img = tf.keras.preprocessing.image.load_img(test_image, target_size=(128, 128))
@@ -13,11 +14,7 @@ def predict_class(test_image):
 # Set the page configuration
 st.set_page_config(page_title="Fruits & Vegetables Recognition", layout="wide", page_icon="🍎")
 
-# Sidebar
-try:
-    st.sidebar.image("logo.png", use_column_width=True)  # Replace with your logo image
-except Exception as e:
-    st.sidebar.warning("Logo image not found!")
+# Sidebar with Logo and Navigation
 
 st.sidebar.title("Dashboard")
 app_mode = st.sidebar.selectbox("Select Page", ["Home", "Prediction", "About Project"])
@@ -25,11 +22,12 @@ app_mode = st.sidebar.selectbox("Select Page", ["Home", "Prediction", "About Pro
 # Home Page
 if app_mode == "Home":
     st.markdown("<h1 style='text-align: center; color: green;'>Fruits & Vegetables Recognition System</h1>", unsafe_allow_html=True)
+    
     try:
         st.image("home_image.jpg", use_column_width=True)  # Make sure the home image exists
-    except Exception as e:
+    except Exception:
         st.warning("Home image not found!")
-
+    
     st.markdown("""
     <div style="padding: 20px; background-color: #f9f9f9; border-radius: 10px; margin-bottom: 20px;">
         <h2>Welcome to the Fruits & Vegetables Recognition System</h2>
@@ -53,6 +51,7 @@ if app_mode == "Home":
 # About Project Page
 if app_mode == "About Project":
     st.title("About the Project")
+    
     st.markdown("""
     <div style="padding: 20px; background-color: #f3f3f3; border-radius: 10px; margin-bottom: 20px;">
         <h2>Purpose of the Project</h2>
@@ -84,10 +83,12 @@ if app_mode == "About Project":
 if app_mode == "Prediction":
     st.title("Prediction Page")
     st.markdown("<h3>Upload an image of a fruit or vegetable</h3>", unsafe_allow_html=True)
+    
     test_image = st.file_uploader("Choose an Image", type=["jpg", "jpeg", "png"])
     
     if test_image:
         st.image(test_image, use_column_width=True)
+        
         if st.button("Predict"):
             result_index = predict_class(test_image)
             class_list = [
@@ -98,3 +99,4 @@ if app_mode == "Prediction":
                 'soy beans', 'spinach', 'sweetcorn', 'sweetpotato', 'tomato', 'turnip', 'watermelon'
             ]
             st.success(f"Model has predicted: **{class_list[result_index]}**")
+
